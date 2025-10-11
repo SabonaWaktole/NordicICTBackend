@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16.4
+    environment:
+      POSTGRES_USER: bojucode
+      POSTGRES_PASSWORD: bojucode
+      POSTGRES_DB: nordic_ict_db
+    volumes:
+      - db-data:/data/postgres
+    ports:
+      - "5333:5432"
+    networks:
+      - db
+    restart: unless-stopped
+
+networks:
+  db:
+    driver: bridge
+
+volumes:
+  db-data:
