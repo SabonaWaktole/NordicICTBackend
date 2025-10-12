@@ -38,4 +38,6 @@ public class AdminModel {
     @NotNull
     private String role;
 
+    private String imageurl;
+
 }

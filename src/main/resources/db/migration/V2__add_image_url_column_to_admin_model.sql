@@ -1,0 +1,1 @@
+ALTER TABLE admin_model ADD COLUMN imageurl VARCHAR(255);
