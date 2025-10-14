@@ -1,0 +1,18 @@
+name: Ping Render App
+
+# Run every 15 minutes
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch: # allows manual trigger
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ping Render App
+        run: |
+          echo "Pinging Render app..."
+          curl -s https://nordicictbackend-1.onrender.com > /dev/null
+          echo "Ping completed at $(date)"
