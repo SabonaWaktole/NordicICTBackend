@@ -1,4 +1,7 @@
 package com.nordic.backend.company.features.partner.repository;
 
-public interface PartnerRepository {
+import com.nordic.backend.company.features.partner.model.PartnerModel;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PartnerRepository extends JpaRepository<PartnerModel,Long> {
 }

@@ -10,6 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Date;
+import java.time.LocalDate;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,13 +29,16 @@ public class NewsModel {
     @NotNull
     private String content;
 
+    private String author;
+
+    private String category;
+
+    private Date publishdate = Date.valueOf(LocalDate.now());
+
+    private String status;
+
     @NotNull
     private String thumbnail;
-
-    @NotNull
-    private String createdat;
-
-    private String link;
 
 
 }

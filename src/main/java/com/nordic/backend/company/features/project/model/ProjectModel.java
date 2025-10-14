@@ -38,7 +38,6 @@ public class ProjectModel {
 
     private Date enddate;
 
-    @NotNull
     private String status;
 
 }
