@@ -1,0 +1,4 @@
+FROM openjdk:21-jdk
+EXPOSE 8080
+ADD target/nordicictbackend.jar nordicictbackend.jar
+ENTRYPOINT ["java","-jar","/nordicictbackend.jar"]
