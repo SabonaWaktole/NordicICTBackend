@@ -1,0 +1,2 @@
+ALTER TABLE project_model
+ALTER COLUMN status DROP NOT NULL;
