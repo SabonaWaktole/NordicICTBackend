@@ -29,4 +29,20 @@ public class PartnerModel {
 
     private String weblink;
 
+    private String industry;
+
+    private String location;
+
+    private String description;
+
+    private String status;
+
+    private String type;
+
+    @NotNull
+    private String email;
+
+    @NotNull
+    private String phonenumber;
+
 }
