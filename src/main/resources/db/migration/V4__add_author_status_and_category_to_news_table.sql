@@ -1,0 +1,5 @@
+ALTER TABLE news_model
+ADD COLUMN author VARCHAR(255),
+ADD COLUMN category VARCHAR(255),
+ADD COLUMN publishdate DATE,
+ADD COLUMN status VARCHAR(255);

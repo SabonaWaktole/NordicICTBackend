@@ -27,8 +27,6 @@ public class AdminModel {
     @NotNull
     private String lastname;
 
-    private String middlename;
-
     @NotNull
     private String password;
 

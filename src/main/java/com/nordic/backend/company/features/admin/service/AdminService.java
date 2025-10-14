@@ -2,19 +2,18 @@ package com.nordic.backend.company.features.admin.service;
 
 import com.nordic.backend.company.features.admin.model.AdminModel;
 import com.nordic.backend.company.features.admin.repository.AdminRepository;
+import com.nordic.backend.company.features.admin.common.supabase.SupabaseFileUploadAdmin;
 import lombok.AllArgsConstructor;
-import org.hibernate.query.NativeQuery;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @Service
 public class AdminService {
     private final AdminRepository adminRepository;
+    private final SupabaseFileUploadAdmin supabaseFileUpload;
 
     public ResponseEntity<?> saveAdmin(AdminModel adminModel) {
         return ResponseEntity.ok(adminRepository.save(adminModel));
@@ -32,17 +31,17 @@ public class AdminService {
         try {
             adminRepository.deleteById(id);
             return ResponseEntity.ok().build();
-        }catch (Exception e) {
-            return  ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 
     public ResponseEntity<?> getAdminByEmail(String email) {
         try {
             AdminModel admin = adminRepository.findByEmail(email);
-            return  new ResponseEntity<>(admin, HttpStatus.OK);
-        }catch (Exception e){
-            return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(admin, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -59,4 +58,19 @@ public class AdminService {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    public String uploadAdminPhoto(MultipartFile file, Long adminId) {
+        AdminModel admin = adminRepository.findById(adminId)
+                .orElseThrow(() -> new RuntimeException("Admin not found"));
+
+        // Upload file to Supabase
+        String fileUrl = supabaseFileUpload.uploadFile(file);
+
+        // Save public URL in DB
+        admin.setImageurl(fileUrl);
+        adminRepository.save(admin);
+
+        return fileUrl;
+    }
+
 }
