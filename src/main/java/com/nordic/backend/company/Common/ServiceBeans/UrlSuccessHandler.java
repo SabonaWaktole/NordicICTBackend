@@ -13,5 +13,4 @@ public class UrlSuccessHandler {
     handler.setAlwaysUseDefaultTargetUrl(true);
     return handler;
   }
-
 }

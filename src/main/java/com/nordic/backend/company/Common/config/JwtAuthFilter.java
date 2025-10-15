@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.nordic.backend.company.Common.utils.JwtUtil;
+import com.nordic.backend.company.Common.JWT.service.JwtService;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -19,9 +19,9 @@ import java.util.Collections;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-  private final JwtUtil jwtUtil;
+  private final JwtService jwtUtil;
 
-  public JwtAuthFilter(JwtUtil jwtUtil) {
+  public JwtAuthFilter(JwtService jwtUtil) {
     this.jwtUtil = jwtUtil;
   }
 

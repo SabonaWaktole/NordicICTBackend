@@ -3,12 +3,14 @@ package com.nordic.backend.company.Common.utils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import com.nordic.backend.company.Common.JWT.service.JwtService;
+
 import jakarta.validation.constraints.NotNull;
 
 @Service
 @AllArgsConstructor
 public class CommonJWTChecker {
-    private final JwtUtil jwtUtil;
+    private final JwtService jwtUtil;
 
     public boolean validateToken(String role, @NotNull String token) {
         if (token.startsWith("Bearer")){

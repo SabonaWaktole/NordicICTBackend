@@ -11,53 +11,51 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
-
 @CrossOrigin(origins = "http://127.0.0.1:5500") // or "*" for all
 @AllArgsConstructor
-//@NoArgsConstructor
+// @NoArgsConstructor
 @RestController
 @RequestMapping("/api/v1/admin")
 public class AdminController {
-    private final AdminService adminService;
+  private final AdminService adminService;
 
-    @GetMapping("/{email}")
-    public ResponseEntity<?> getAdmin(@PathVariable String email) {
-        return adminService.getAdminByEmail(email);
-    }
+  @GetMapping("/{email}")
+  public ResponseEntity<?> getAdmin(@PathVariable String email) {
+    return adminService.getAdminByEmail(email);
+  }
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getAllAdmin(){
-        return adminService.getAllAdmins();
-    }
+  @GetMapping("/all")
+  public ResponseEntity<?> getAllAdmin() {
+    return adminService.getAllAdmins();
+  }
 
-    @PostMapping("/new")
-    public ResponseEntity<?> addNewAdmin(@RequestBody AdminModel admin) {
-        return adminService.saveAdmin(admin);
-    }
+  @PostMapping("/new")
+  public ResponseEntity<?> addNewAdmin(@RequestBody AdminModel admin) {
+    return adminService.saveAdmin(admin);
+  }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateAdmin(@PathVariable Long id, @RequestBody AdminModel admin) {
-        return adminService.updateAdmin(id, admin);
-    }
+  @PutMapping("/update/{id}")
+  public ResponseEntity<?> updateAdmin(@PathVariable Long id, @RequestBody AdminModel admin) {
+    return adminService.updateAdmin(id, admin);
+  }
 
-    @DeleteMapping("/delete/{id}")
-    public  ResponseEntity<?> deleteAdmin(@PathVariable Long id) {
-        return adminService.deleteAdmin(id);
-    }
+  @DeleteMapping("/delete/{id}")
+  public ResponseEntity<?> deleteAdmin(@PathVariable Long id) {
+    return adminService.deleteAdmin(id);
+  }
 
-    @PostMapping("/upload-photo")
-    public ResponseEntity<String> uploadPhoto(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("adminId") Long adminId) {
+  @PostMapping("/upload-photo")
+  public ResponseEntity<String> uploadPhoto(
+      @RequestParam("file") MultipartFile file,
+      @RequestParam("adminId") Long adminId) {
 
-        String publicUrl = adminService.uploadAdminPhoto(file, adminId);
-        return ResponseEntity.ok(publicUrl);
-    }
+    String publicUrl = adminService.uploadAdminPhoto(file, adminId);
+    return ResponseEntity.ok(publicUrl);
+  }
 
-    @GetMapping("/login")
-    public JwtResponse login(@RequestBody LoginRequest request) {
-        return adminService.login(request.getEmail(), request.getPassword());
-    }
-    
+  @GetMapping("/login")
+  public JwtResponse login(@RequestBody LoginRequest request) {
+    return adminService.login(request.getEmail(), request.getPassword());
+  }
+
 }
