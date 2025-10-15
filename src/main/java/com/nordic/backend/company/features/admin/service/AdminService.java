@@ -1,24 +1,30 @@
 package com.nordic.backend.company.features.admin.service;
 
-import com.nordic.backend.company.features.admin.model.AdminModel;
-import com.nordic.backend.company.features.admin.repository.AdminRepository;
-import com.nordic.backend.company.features.admin.common.supabase.SupabaseFileUploadAdmin;
-import lombok.AllArgsConstructor;
-
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.nordic.backend.company.Common.Responses.JwtResponse;
+import com.nordic.backend.company.Common.excetions.UnauthorizedException;
+import com.nordic.backend.company.Common.utils.JwtUtil;
+import com.nordic.backend.company.features.admin.common.supabase.SupabaseFileUploadAdmin;
+import com.nordic.backend.company.features.admin.model.AdminModel;
+import com.nordic.backend.company.features.admin.repository.AdminRepository;
+
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @Service
 public class AdminService {
+
     private final AdminRepository adminRepository;
     private final SupabaseFileUploadAdmin supabaseFileUpload;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     public ResponseEntity<?> saveAdmin(AdminModel adminModel) {
         adminModel.setPassword(passwordEncoder.encode(adminModel.getPassword()));
@@ -29,6 +35,7 @@ public class AdminService {
     public boolean userExists(String email) {
         return adminRepository.findByEmail(email).isPresent();
     }
+
     public ResponseEntity<?> getAllAdmins() {
         return ResponseEntity.ok(adminRepository.findAll());
     }
@@ -83,4 +90,33 @@ public class AdminService {
         return fileUrl;
     }
 
+    public JwtResponse login(String email, String password) {
+        try {
+            Optional<AdminModel> admin = adminRepository.findByEmail(email);
+            if (admin.isPresent()) {
+                // Cast admin to adminmodel
+                AdminModel adminModel = admin.get();
+
+                if (!passwordEncoder.matches(password, adminModel.getPassword())) {
+                    throw new UnauthorizedException("Invalid email or password");
+                }
+
+                String accesToken = jwtUtil.generateAccessToken(adminModel.getEmail(), password);
+                String refreshToken = jwtUtil.generateRefreshToken(adminModel.getEmail(), password);
+                return new JwtResponse(accesToken, refreshToken);
+            } else {
+                throw new UnauthorizedException("Invalid email or password");
+            }
+
+        } catch (Exception e) {
+            throw new UnauthorizedException(e.getMessage());
+        }
+    }
+
+    public String getNewAccessToken(String refreshToken) {
+        if (!jwtUtil.validateJwtToken(refreshToken)) {
+            throw new UnauthorizedException("Invalid refresh token");
+        }
+        return jwtUtil.getNewAccessToken(refreshToken);
+    }
 }

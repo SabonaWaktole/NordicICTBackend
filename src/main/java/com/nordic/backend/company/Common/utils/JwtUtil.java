@@ -17,19 +17,32 @@ import java.util.Date;
 public class JwtUtil {
     @Value("${jwt.secret}")
     private String jwtSecret;
-    @Value("${jwt.expiration}")
-    private int jwtExpirationMs;
+    @Value("${jwt.accessexpiration}")
+    private int jwtAccessExpirationMS;
+
+    @Value("${jwt.refreshexpiration}")
+    private int jwtRefreshExpirationMS;
+
     private SecretKey key;
     @PostConstruct
     public void init() {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
-    public String generateToken(String username, String role) {
+    public String generateAccessToken(String username, String role) {
         return Jwts.builder()
                 .setSubject(username)
                 .claim("role", "ROLE_"+role)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .setExpiration(new Date((new Date()).getTime() + jwtAccessExpirationMS))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+    public String generateRefreshToken(String username, String role) {
+        return Jwts.builder()
+                .setSubject(username)
+                .claim("role", "ROLE_"+role)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + jwtRefreshExpirationMS))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -49,6 +62,13 @@ public class JwtUtil {
                 .get("role", String.class);
     }
 
+    public String getNewAccessToken(String refreshToken) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key).build()
+                .parseClaimsJws(refreshToken)
+                .getBody()
+                .getSubject();
+    }
 
     public boolean validateJwtToken(String token) {
         try {
