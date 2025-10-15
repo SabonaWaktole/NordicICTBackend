@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
+@RequestMapping("/subscriber")
 public class SubscriberController {
     private final SubscriberService subscriberService;
 

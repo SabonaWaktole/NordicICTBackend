@@ -4,21 +4,31 @@ import com.nordic.backend.company.features.admin.model.AdminModel;
 import com.nordic.backend.company.features.admin.repository.AdminRepository;
 import com.nordic.backend.company.features.admin.common.supabase.SupabaseFileUploadAdmin;
 import lombok.AllArgsConstructor;
+
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @AllArgsConstructor
 @Service
 public class AdminService {
     private final AdminRepository adminRepository;
     private final SupabaseFileUploadAdmin supabaseFileUpload;
+    private final PasswordEncoder passwordEncoder;
 
     public ResponseEntity<?> saveAdmin(AdminModel adminModel) {
+        adminModel.setPassword(passwordEncoder.encode(adminModel.getPassword()));
+        System.out.println(adminModel.getPassword());
         return ResponseEntity.ok(adminRepository.save(adminModel));
     }
 
+    public boolean userExists(String email) {
+        return adminRepository.findByEmail(email).isPresent();
+    }
     public ResponseEntity<?> getAllAdmins() {
         return ResponseEntity.ok(adminRepository.findAll());
     }
@@ -38,7 +48,7 @@ public class AdminService {
 
     public ResponseEntity<?> getAdminByEmail(String email) {
         try {
-            AdminModel admin = adminRepository.findByEmail(email);
+            Optional<AdminModel> admin = adminRepository.findByEmail(email);
             return new ResponseEntity<>(admin, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
