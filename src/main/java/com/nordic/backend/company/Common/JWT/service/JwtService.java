@@ -8,6 +8,10 @@ import org.springframework.stereotype.Component;
 
 import com.nordic.backend.company.Common.JWT.model.JwtModel;
 import com.nordic.backend.company.Common.JWT.repository.JwtRepository;
+import com.nordic.backend.company.Common.Responses.JwtResponse;
+import com.nordic.backend.company.Common.excetions.ExpiredJWTException;
+import com.nordic.backend.company.Common.excetions.MalformedJWTException;
+import com.nordic.backend.company.Common.excetions.UnauthorizedException;
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -62,7 +66,7 @@ public class JwtService {
         .signWith(key, SignatureAlgorithm.HS256)
         .compact();
 
-    JwtModel jwtModel = new JwtModel(); // ✅ create a new instance each time
+    JwtModel jwtModel = new JwtModel(); // Create a new instance each time
     jwtModel.setToken(refreshToken);
     jwtModel.setUseremail(username);
     jwtModel.setIssuedat(issuedAt);
@@ -87,50 +91,66 @@ public class JwtService {
         .get("role", String.class);
   }
 
-  public String getNewAccessToken(String refreshToken, String accessToken, String userEmail) {
+  public JwtResponse getNewAccessToken(String refreshToken, String accessToken, String userEmail) {
     JwtModel jwtModel = jwtRepository.findByToken(refreshToken)
         .orElseThrow(() -> new RuntimeException("Refresh token not found"));
 
     // Make sure the token belongs to this user
     if (!jwtModel.getUseremail().equals(userEmail) ||
-    getUsernameFromToken(refreshToken) != userEmail ||
-    getRoleFromToken(refreshToken) != getRoleFromToken(accessToken))
-    {
+        getUsernameFromToken(refreshToken) != userEmail ||
+        getRoleFromToken(refreshToken) != getRoleFromToken(accessToken)) {
       throw new RuntimeException("Refresh token does not belong to this user");
     }
 
-    // Validate refresh token (signature & expiry)
-    if (!validateJwtToken(refreshToken)) {
+    try{
+      validateJwtToken(refreshToken, userEmail);
+    } catch (ExpiredJWTException e) {
       jwtRepository.delete(jwtModel);
-      throw new RuntimeException("Invalid or expired refresh token");
+      throw new RuntimeException("Refresh token is Expired");
+    } catch (MalformedJWTException e) {
+      throw new RuntimeException( "Refresh token is malformed");
     }
 
-    //  Extract info from the refresh token
+
+    // Extract info from the refresh token
     String username = getUsernameFromToken(refreshToken);
     String role = getRoleFromToken(refreshToken);
 
     // Generate new access token
     String newAccessToken = generateAccessToken(username, role);
 
-    return newAccessToken;
+    // Delete the old refresh token
+    jwtRepository.delete(jwtModel);
+
+    // Generate new refresh token
+    String newRefreshToken = generateRefreshToken(username, role);
+
+    return new JwtResponse(newAccessToken, newRefreshToken);
   }
 
-  public boolean validateJwtToken(String token) {
+  public boolean validateJwtToken(String token, String userName) {
     try {
       Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+      if (!getUsernameFromToken(token).equals(userName)) {
+        throw new UnauthorizedException("Invalid User:");
+      }
       return true;
     } catch (SecurityException e) {
       System.out.println("Invalid JWT signature: " + e.getMessage());
+      throw new UnauthorizedException("Invalid JWT signature: " + e.getMessage());
     } catch (MalformedJwtException e) {
       System.out.println("Invalid JWT token: " + e.getMessage() + token);
+      throw new MalformedJwtException("Invalid JWT token: " + e.getMessage());
     } catch (ExpiredJwtException e) {
       System.out.println("JWT token is expired: " + e.getMessage());
+      throw new ExpiredJWTException("JWT token is expired: " + e.getMessage());
     } catch (UnsupportedJwtException e) {
       System.out.println("JWT token is unsupported: " + e.getMessage());
+      throw new UnsupportedJwtException(e.getMessage());
     } catch (IllegalArgumentException e) {
       System.out.println("JWT claims string is empty: " + e.getMessage());
+      throw new IllegalArgumentException(e.getMessage());
     }
-    return false;
   }
 
   public String logout(String refreshToken) {
@@ -139,4 +159,14 @@ public class JwtService {
     jwtRepository.delete(jwtModel);
     return "Logout successful";
   }
+
+  public boolean isTokenExpired(String token) {
+    try {
+      Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+      return false;
+    } catch (ExpiredJwtException e) {
+      return true;
+    }
+  }
+
 }

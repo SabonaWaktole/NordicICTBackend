@@ -21,26 +21,16 @@ public class JwtController {
   private final JwtService jwtUtil;
 
   @GetMapping("/refresh")
-  public String getNewAccesToken(@RequestParam String email, @RequestBody JwtResponse jwtResponse) {
+  public JwtResponse getNewAccesToken(@RequestParam String email, @RequestBody JwtResponse jwtResponse) {
 
     try {
-      String newAccessToken = jwtUtil.getNewAccessToken(jwtResponse.getRefreshToken(), jwtResponse.getAccessToken(), email);
-      return newAccessToken;
+      JwtResponse newJwtResponse = jwtUtil.getNewAccessToken(jwtResponse.getRefreshToken(), jwtResponse.getAccessToken(), email);
+      return newJwtResponse;
     } catch (Exception e) {
-      return "new String()";
+      throw new RuntimeException(e.getMessage());
     }
   }
   
-  @DeleteMapping("/logout")
-  public String logout(@RequestBody String refreshToken) {
 
-    try {
-      jwtUtil.logout(refreshToken);
-      return "Logout successful";
-    } catch (Exception e) {
-      return new String();
-  }
-  
-}
 
 }

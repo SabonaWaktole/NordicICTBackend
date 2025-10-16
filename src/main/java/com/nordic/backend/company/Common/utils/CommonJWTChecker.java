@@ -12,12 +12,12 @@ import jakarta.validation.constraints.NotNull;
 public class CommonJWTChecker {
     private final JwtService jwtUtil;
 
-    public boolean validateToken(String role, @NotNull String token) {
+    public boolean validateToken(String role, @NotNull String token, String email) {
         if (token.startsWith("Bearer")){
             token = token.substring(7);
         }
         //2 validate token
-        if (!jwtUtil.validateJwtToken(token)){
+        if (!jwtUtil.validateJwtToken(token, email)){
             System.out.println(token);
             return false;
         }

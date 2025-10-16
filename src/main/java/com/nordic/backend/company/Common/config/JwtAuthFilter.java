@@ -25,6 +25,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     this.jwtUtil = jwtUtil;
   }
 
+/**
+ * Filter every incoming request to check if the request has a valid JWT token.
+ * If the token is valid, authenticate the user and set the authentication in the security context.
+ * If the token is invalid, do not authenticate the user.
+ * @param request the incoming request
+ * @param response the response to the request
+ * @param filterChain the filter chain to continue the request
+ * @throws ServletException if an error occurs during the filter
+ * @throws IOException if an error occurs during the filter
+ */
   @Override
   protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response,
       @NotNull FilterChain filterChain)
@@ -39,8 +49,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     String authHeader = request.getHeader("Authorization");
     if (authHeader != null && authHeader.startsWith("Bearer ")) {
       String token = authHeader.substring(7);
-      if (jwtUtil.validateJwtToken(token)) {
-        String username = jwtUtil.getUsernameFromToken(token);
+      String username = jwtUtil.getUsernameFromToken(token);
+      if (jwtUtil.validateJwtToken(token, username)) {
         String role = jwtUtil.getRoleFromToken(token);
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
