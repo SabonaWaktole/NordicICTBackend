@@ -32,12 +32,13 @@ public class AdminService {
 
   public ResponseEntity<?> saveAdmin(AdminModel adminModel, String token, String email) {
 
-    if (commonJWTChecker.validateToken("ADMIN", token, email)) {
+    try {
+      commonJWTChecker.validateToken("ADMIN", token, email);
       adminModel.setPassword(passwordEncoder.encode(adminModel.getPassword()));
       return ResponseEntity.ok(adminRepository.save(adminModel));
+    } catch (Exception e) {
+      throw new UnauthorizedException("Unauthorized Admin");
     }
-
-    throw new UnauthorizedException("Unauthorized Admin");
 
   }
 
@@ -46,22 +47,23 @@ public class AdminService {
   }
 
   public ResponseEntity<?> getAllAdmins(String token, String email) {
-    if (commonJWTChecker.validateToken("ADMIN", token, email)) {
+    try {
+      commonJWTChecker.validateToken("ADMIN", token, email);
       return ResponseEntity.ok(adminRepository.findAll());
+    } catch (Exception e) {
+      throw new UnauthorizedException("Unauthorized Admin");
     }
-
-    throw new UnauthorizedException("Unauthorized Admin");
-
   }
 
   public ResponseEntity<?> getAdminById(Long id) {
     return ResponseEntity.ok(adminRepository.findById(id).orElse(null));
   }
 
-  public ResponseEntity<?> deleteAdmin(String token,String email) {
+  public ResponseEntity<?> deleteAdmin(String token, String email) {
     try {
       commonJWTChecker.validateToken("ADMIN", token, email);
-      AdminModel adminModel = adminRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Admin not found"));
+      AdminModel adminModel = adminRepository.findByEmail(email)
+          .orElseThrow(() -> new RuntimeException("Admin not found"));
       adminRepository.deleteById(adminModel.getId());
       return ResponseEntity.ok().build();
     } catch (Exception e) {
@@ -69,7 +71,7 @@ public class AdminService {
     }
   }
 
-  public ResponseEntity<?> getAdminByEmail(String token,String email) {
+  public ResponseEntity<?> getAdminByEmail(String token, String email) {
     try {
       commonJWTChecker.validateToken("ADMIN", token, email);
       Optional<AdminModel> admin = adminRepository.findByEmail(email);
@@ -79,7 +81,7 @@ public class AdminService {
     }
   }
 
-  public ResponseEntity<?> updateAdmin( AdminModel adminModel, String accessToken, String email) {
+  public ResponseEntity<?> updateAdmin(AdminModel adminModel, String accessToken, String email) {
     try {
       commonJWTChecker.validateToken("ADMIN", accessToken, email);
       AdminModel admin = adminRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Admin not found"));

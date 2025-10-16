@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import com.nordic.backend.company.Common.JWT.service.JwtService;
+import com.nordic.backend.company.Common.excetions.UnauthorizedException;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -18,8 +19,10 @@ public class CommonJWTChecker {
         }
         //2 validate token
         if (!jwtUtil.validateJwtToken(token, email)){
-            System.out.println(token);
-            return false;
+            throw new UnauthorizedException("Unauthorized User");
+        }
+        if (!jwtUtil.getUsernameFromToken(token).equals(email)){
+            throw new UnauthorizedException("Unauthorized User");
         }
         //3 check role
         return (jwtUtil.getRoleFromToken(token).equals(role) || role == null);
