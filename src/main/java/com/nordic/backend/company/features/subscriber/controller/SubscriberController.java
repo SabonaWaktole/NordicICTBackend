@@ -7,8 +7,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+
+
+@CrossOrigin(origins = {"http://127.0.0.1:5500", "http://localhost:5173", "http://localhost:5174"}) // or "*" for all
 @AllArgsConstructor
 @RestController
+@RequestMapping("/api/v1/subscribers")
 public class SubscriberController {
     private final SubscriberService subscriberService;
 
