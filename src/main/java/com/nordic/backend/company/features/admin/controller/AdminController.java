@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@CrossOrigin(origins = {"http://127.0.0.1:5500", "http://localhost:5173", "http://localhost:5174"}) // or "*" for all
+@CrossOrigin(origins = { "http://127.0.0.1:5500", "http://localhost:5173", "http://localhost:5174" }) // or "*" for all
 @AllArgsConstructor
 // @NoArgsConstructor
 @RestController
@@ -18,14 +18,14 @@ public class AdminController {
 
   private final AdminService adminService;
 
-
   @GetMapping("/{email}")
-  public ResponseEntity<?> getAdmin(@RequestHeader("Authorization") String token,@PathVariable String email) {
+  public ResponseEntity<?> getAdmin(@RequestHeader("Authorization") String token, @PathVariable String email) {
     return adminService.getAdminByEmail(token, email);
   }
 
   @GetMapping("/all")
   public ResponseEntity<?> getAllAdmin(@RequestHeader("Authorization") String token, @RequestBody String email) {
+    // System.out.println(emai);
     return adminService.getAllAdmins(token, email);
   }
 
@@ -60,15 +60,16 @@ public class AdminController {
     return adminService.login(request.getEmail(), request.getPassword());
   }
 
-    @DeleteMapping("/logout")
-  public String logout(@RequestBody String refreshToken) {
-
+  @DeleteMapping("/logout")
+  public String logout(
+      @RequestBody String refreshToken,
+      @RequestParam String email,
+      @RequestHeader("Authorization") String token) {
     try {
-      adminService.logout(refreshToken);
+      adminService.logout(refreshToken, token, email);
       return "Logout successful";
     } catch (Exception e) {
       return new String();
+    }
   }
-  
-}
 }

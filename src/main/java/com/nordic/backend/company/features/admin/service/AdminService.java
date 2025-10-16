@@ -1,7 +1,6 @@
 package com.nordic.backend.company.features.admin.service;
 
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,6 @@ import com.nordic.backend.company.features.admin.model.AdminModel;
 import com.nordic.backend.company.features.admin.repository.AdminRepository;
 import com.nordic.backend.company.features.authorization.service.JwtService;
 
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -49,6 +47,7 @@ public class AdminService {
   public ResponseEntity<?> getAllAdmins(String token, String email) {
     try {
       commonJWTChecker.validateToken("ADMIN", token, email);
+      System.out.println("Admin id Fed Up");
       return ResponseEntity.ok(adminRepository.findAll());
     } catch (Exception e) {
       throw new UnauthorizedException("Unauthorized Admin");
@@ -111,7 +110,6 @@ public class AdminService {
 
       return fileUrl;
     } catch (Exception e) {
-      // TODO Auto-generated catch block
       throw new UnauthorizedException(e.getMessage());
     }
   }
@@ -124,7 +122,7 @@ public class AdminService {
         AdminModel adminModel = admin.get();
 
         if (!passwordEncoder.matches(password, adminModel.getPassword())) {
-          throw new UnauthorizedException("Invalid email or password");
+          throw new UnauthorizedException("Invalid email or password not matched");
         }
 
         String accesToken = jwtUtil.generateAccessToken(adminModel.getEmail(), "ADMIN");
@@ -138,12 +136,12 @@ public class AdminService {
       throw new UnauthorizedException(e.getMessage());
     }
   }
-
-  // public JwtResponse getNewAccessToken(String refreshToken, String accesToken,
-  // String userEmail) {
-  // return jwtUtil.getNewAccessToken(refreshToken, accesToken, userEmail);
-  // }
-  public String logout(String refreshToken) {
-    return jwtUtil.logout(refreshToken);
+  public String logout(String refreshToken, String accessToken, String email) {
+    try {
+      commonJWTChecker.validateToken("ADMIN", accessToken, email);
+      return jwtUtil.logout(refreshToken);
+    } catch (Exception e) {
+      throw new UnauthorizedException(e.getMessage());
+    }
   }
 }
