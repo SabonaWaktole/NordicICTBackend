@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@CrossOrigin(origins = "http://127.0.0.1:5500") // or "*" for all
+@CrossOrigin(origins = {"http://127.0.0.1:5500", "http://localhost:5173", "http://localhost:5174"}) // or "*" for all
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/partners")
