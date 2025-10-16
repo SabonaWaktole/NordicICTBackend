@@ -5,4 +5,3 @@ WHERE id NOT IN (
     GROUP BY email
     HAVING COUNT(*) > 1
 );
-
