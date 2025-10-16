@@ -1,8 +1,8 @@
 package com.nordic.backend.company.features.news.service;
 
-import com.nordic.backend.company.Common.JWT.service.JwtService;
 import com.nordic.backend.company.Common.excetions.UnauthorizedException;
 import com.nordic.backend.company.Common.utils.CommonJWTChecker;
+import com.nordic.backend.company.features.authorization.service.JwtService;
 import com.nordic.backend.company.features.news.common.supabase.SupabaseFileUploadNews;
 import com.nordic.backend.company.features.news.model.NewsModel;
 import com.nordic.backend.company.features.news.repository.NewsRepository;

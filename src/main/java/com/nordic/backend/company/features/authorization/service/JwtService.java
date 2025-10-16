@@ -1,4 +1,4 @@
-package com.nordic.backend.company.Common.JWT.service;
+package com.nordic.backend.company.features.authorization.service;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -6,12 +6,12 @@ import jakarta.annotation.PostConstruct;
 
 import org.springframework.stereotype.Component;
 
-import com.nordic.backend.company.Common.JWT.model.JwtModel;
-import com.nordic.backend.company.Common.JWT.repository.JwtRepository;
 import com.nordic.backend.company.Common.Responses.JwtResponse;
 import com.nordic.backend.company.Common.excetions.ExpiredJWTException;
 import com.nordic.backend.company.Common.excetions.MalformedJWTException;
 import com.nordic.backend.company.Common.excetions.UnauthorizedException;
+import com.nordic.backend.company.features.authorization.model.JwtModel;
+import com.nordic.backend.company.features.authorization.repository.JwtRepository;
 
 import org.springframework.beans.factory.annotation.Value;
 

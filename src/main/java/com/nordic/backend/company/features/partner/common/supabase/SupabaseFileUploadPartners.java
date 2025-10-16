@@ -129,7 +129,7 @@ public class SupabaseFileUploadPartners {
                         .queryParam("bucketId", "PartnersPhotos")
                         .build()
                         .toUri();
-
+                        
                 // Validate the constructed URI
                 validateSupabaseUrl(uploadUri.toString());
             } catch (Exception e) {

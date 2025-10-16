@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.nordic.backend.company.Common.JWT.service.JwtService;
 import com.nordic.backend.company.Common.excetions.UnauthorizedException;
 import com.nordic.backend.company.Common.utils.CommonJWTChecker;
+import com.nordic.backend.company.features.authorization.service.JwtService;
 import com.nordic.backend.company.features.partner.common.supabase.SupabaseFileUploadPartners;
 
 @Service

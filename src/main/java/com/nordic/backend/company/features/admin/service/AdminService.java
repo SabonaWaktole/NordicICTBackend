@@ -9,13 +9,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.nordic.backend.company.Common.JWT.service.JwtService;
 import com.nordic.backend.company.Common.Responses.JwtResponse;
 import com.nordic.backend.company.Common.excetions.UnauthorizedException;
 import com.nordic.backend.company.Common.utils.CommonJWTChecker;
 import com.nordic.backend.company.features.admin.common.supabase.SupabaseFileUploadAdmin;
 import com.nordic.backend.company.features.admin.model.AdminModel;
 import com.nordic.backend.company.features.admin.repository.AdminRepository;
+import com.nordic.backend.company.features.authorization.service.JwtService;
 
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;

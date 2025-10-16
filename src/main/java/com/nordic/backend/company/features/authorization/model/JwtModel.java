@@ -1,4 +1,4 @@
-package com.nordic.backend.company.Common.JWT.model;
+package com.nordic.backend.company.features.authorization.model;
 
 import java.util.Date;
 
@@ -17,8 +17,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 
 @AllArgsConstructor

@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.nordic.backend.company.Common.JWT.service.JwtService;
+import com.nordic.backend.company.features.authorization.service.JwtService;
 
 import java.io.IOException;
 import java.util.Collections;
