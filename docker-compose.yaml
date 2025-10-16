@@ -1,22 +1,21 @@
-version: "3.9"
+version: '3.9'
 
 services:
   db:
     image: postgres:16.4
+    container_name: nordicictbackend-db
     environment:
+      POSTGRES_DB: nordic_ict_db
       POSTGRES_USER: bojucode
       POSTGRES_PASSWORD: bojucode
-      POSTGRES_DB: nordic_ict_db
-    volumes:
-      - db-data:/var/lib/postgresql/data
     ports:
       - "5331:5432"
-    networks:
-      - backend-net
-    restart: unless-stopped
+    volumes:
+      - db_data:/var/lib/postgresql/data
 
   app:
-    image: nordicictbackend:latest
+    build: .
+    container_name: nordicictbackend-app
     depends_on:
       - db
     environment:
@@ -24,14 +23,7 @@ services:
       SPRING_DATASOURCE_USERNAME: bojucode
       SPRING_DATASOURCE_PASSWORD: bojucode
     ports:
-      - "9090:8080"
-    networks:
-      - backend-net
-    restart: unless-stopped
-
-networks:
-  backend-net:
-    driver: bridge
+      - "8080:8080"
 
 volumes:
-  db-data:
+  db_data:

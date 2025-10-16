@@ -1,20 +1,23 @@
-package com.nordic.backend.company.features.admin.model;
+package com.nordic.backend.company.features.authorization.model;
+
+import java.util.Date;
 
 
 import org.springframework.stereotype.Component;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.Setter;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,27 +27,24 @@ import lombok.Setter;
 @Builder // lombok annotation to  generate constructor
 @Data
 @Component
-public class AdminModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class JwtModel {
 
-    @NotNull
-    private String firstname;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @NotNull
-    private String lastname;
 
-    @NotNull
-    private String password;
+  @Column(unique = true)
+  @NotNull
+  private String token;
 
-    @Column(unique = true)
-    @NotNull
-    private String email;
+  @NotNull
+  private Date issuedat;
 
-    @NotNull
-    private String role;
+  @NotNull
+  private Date expiresat;
 
-    private String imageurl;
+  @NotNull
+  private String useremail;
 
 }
