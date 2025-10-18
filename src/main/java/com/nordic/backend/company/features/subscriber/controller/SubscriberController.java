@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 
-@CrossOrigin(origins = {"http://127.0.0.1:5500", "http://localhost:5173", "http://localhost:5174"}) // or "*" for all
+@CrossOrigin(origins = "*")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/subscribers")
