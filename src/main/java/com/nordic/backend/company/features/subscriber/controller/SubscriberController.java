@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5173")
 @AllArgsConstructor
+// @NoArgsConstructor
 @RestController
 @RequestMapping("/api/v1/subscribers")
 public class SubscriberController {

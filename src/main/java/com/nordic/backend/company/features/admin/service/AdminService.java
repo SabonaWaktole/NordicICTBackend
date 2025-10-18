@@ -124,7 +124,7 @@ public class AdminService {
         if (!passwordEncoder.matches(password, adminModel.getPassword())) {
           throw new UnauthorizedException("Invalid email or password not matched");
         }
-
+        System.out.println("Admin Sabona Waktole Fed Up");
         String accesToken = jwtUtil.generateAccessToken(adminModel.getEmail(), "ADMIN");
         String refreshToken = jwtUtil.generateRefreshToken(adminModel.getEmail(), "ADMIN");
         return new JwtResponse(accesToken, refreshToken);
