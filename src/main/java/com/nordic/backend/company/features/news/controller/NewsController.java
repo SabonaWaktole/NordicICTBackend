@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5173")
 @AllArgsConstructor
+// @NoArgsConstructor
 @RestController
 @RequestMapping("/api/v1/news")
 public class NewsController {

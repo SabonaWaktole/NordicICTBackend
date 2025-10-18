@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5173")
 @AllArgsConstructor
 // @NoArgsConstructor
 @RestController
@@ -56,7 +56,7 @@ public class AdminController {
     return ResponseEntity.ok(publicUrl);
   }
 
-  @GetMapping("/login")
+  @PostMapping("/login")
   public JwtResponse login(@RequestBody LoginRequest request) {
     return adminService.login(request.getEmail(), request.getPassword());
   }
